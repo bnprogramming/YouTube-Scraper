@@ -11,7 +11,7 @@ report2 = []
 
 if __name__ == '__main__':
 
-    channel_name = input("Enter Channel Name:\n")
+    channel_name = input("Enter Channel Name:\n").strip()
     scraper = YouTubeScraper(api_key, channel_name)
 
     playlists = scraper.playlists_extractor()

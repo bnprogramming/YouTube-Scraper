@@ -31,8 +31,8 @@ Quick start
 -----------
 
 1. Make a google cloud project and generate your api_token for youtube::
-2. Set the api key in ``constants.py``:
-3. install packages in ``requirements.txt`` file with pip install -r
+2. Set the api key in ``constants.py``
+3. Install packages in ``requirements.txt`` file with pip install -r
 4. Start scraping ....
 
 TODO

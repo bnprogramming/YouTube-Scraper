@@ -1,0 +1,49 @@
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+import os
+
+# Define the scopes required for YouTube Data API v3
+SCOPES = ['https://www.googleapis.com/auth/youtube.upload']
+
+def upload_video(video_file, title, description):
+    # Authenticate and build the service for YouTube Data API v3
+    flow = InstalledAppFlow.from_client_secrets_file(
+        'YOUR_CLIENT_SECRET_FILE.json',  # Path to your OAuth 2.0 credentials JSON file
+        SCOPES
+    )
+    credentials = flow.run_local_server(port=0)
+
+    youtube = build('youtube', 'v3', credentials=credentials)
+
+    # Prepare the video metadata
+    request_body = {
+        'snippet': {
+            'title': title,
+            'description': description,
+            'tags': ['tag1', 'tag2'],  # Add relevant tags if needed
+            'categoryId': '22'  # See https://developers.google.com/youtube/v3/docs/videoCategories/list for category IDs
+        },
+        'status': {
+            'privacyStatus': 'public'  # 'private', 'unlisted' or 'public'
+        }
+    }
+
+    # Execute the API request to upload the video
+    insert_request = youtube.videos().insert(
+        part='snippet,status',
+        body=request_body,
+        media_body=video_file
+    )
+    response = insert_request.execute()
+
+    print(f'Video uploaded successfully! Video ID: {response["id"]}')
+
+if __name__ == '__main__':
+    video_file_path = 'path/to/your/video.mp4'  # Replace with the path to your video file
+    video_title = 'Test Video Title'
+    video_description = 'This is a test video uploaded via Python.'
+
+    video_file = os.path.abspath(video_file_path)
+
+    upload_video(video_file, video_title, video_description)
